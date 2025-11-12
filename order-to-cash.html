@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="sq"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Order-to-Cash — Procese & SOP</title>
+<style>
+:root{--bg:#0b1220;--card:#111a2b;--line:#213454;--muted:#9fb0ce;--accent:#60a5fa;--good:#34d399;--warn:#f59e0b;}
+*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+html,body{margin:0;padding:0;background:linear-gradient(180deg,#0a0f1c,#0b1220 35%,#0e1526);color:#e5eefc}
+.container{max-width:1100px;margin:0 auto;padding:24px 16px}
+.header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.badge{background:#13233f;border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:#cfe2ff;font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0}
+h1{font-size:28px;margin:0}
+h2{font-size:18px;margin:0 0 8px 0}
+p{margin:0 0 8px 0;color:#d9e6ff}
+small, .muted{color:var(--muted)}
+.grid{display:grid;gap:12px}
+.grid.two{grid-template-columns:1fr 1fr}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.grid.two,.grid.three{grid-template-columns:1fr}}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border-bottom:1px dashed var(--line);padding:8px;text-align:left}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.nav a{display:inline-block;text-decoration:none;color:#e5eefc;background:#17305c;border:1px solid #27508f;padding:10px 12px;border-radius:12px}
+.kpi{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#0f1b31}
+.kpi .value{font-weight:700}
+.accordion .item{border:1px solid var(--line);border-radius:12px;margin:8px 0;overflow:hidden;background:#0c182e}
+.accordion summary{cursor:pointer;padding:12px 14px;font-weight:600;list-style:none}
+.accordion summary::-webkit-details-marker{display:none}
+.accordion .content{padding:10px 14px;border-top:1px dashed var(--line)}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:#13233f;color:#cfe2ff;font-size:12px}
+footer{margin-top:18px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Order-to-Cash</h1>
+    <span class="badge">Procese &amp; SOP</span>
+  </div>
+  <div class="card">
+    <h2>Përmbledhje</h2>
+    <p>Procesi nga porosia e klientit deri te arkëtimi i pagesës.</p>
+    <div class="nav"><a href="procure-to-pay.html">Procure-to-Pay</a>
+<a href="order-to-cash.html">Order-to-Cash</a>
+<a href="cikli-i-pagave.html">Cikli i Pagave</a>
+<a href="mbyllja-mujore.html">Mbyllja Mujore</a>
+<a href="buxhetim-and-parashikim.html">Buxhetim & Parashikim</a>
+<a href="risk-and-compliance.html">Risk & Compliance</a></div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h2>RACI / Role</h2>
+      <table class="table">
+        <thead><tr><th>Roli</th><th>Përgjegjësia</th><th>Shënime</th></tr></thead>
+        <tbody id="raci-body">
+          <tr><td>Pronari i procesit</td><td>Përditëson SOP, miraton ndryshimet</td><td class="muted">—</td></tr>
+          <tr><td>Kontabilist</td><td>Ekzekuton hapat operativë</td><td class="muted">—</td></tr>
+          <tr><td>Auditor i brendshëm</td><td>Verifikon kontrollet</td><td class="muted">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>KPI & Objektiva</h2>
+      <div class="grid">
+        <div class="kpi"><span class="tag">KPI</span><span>Koha e ciklit</span><span class="value">— ditë</span></div>
+        <div class="kpi"><span class="tag">KPI</span><span>Saktësia</span><span class="value">&ge; 99%</span></div>
+        <div class="kpi"><span class="tag">KPI</span><span>Shkelje/defekte</span><span class="value">&le; 0.5%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Hapat e Procesit (SOP)</h2>
+    <div class="accordion">
+      <details class="item" open>
+        <summary>1) Nisja / Input-et</summary>
+        <div class="content">
+          <ul>
+            <li>Dokumentet hyrëse (porosi, fatura, kontrata, kërkesë blerjeje, lista pagash, etj.).</li>
+            <li>Rregullat e miratimit dhe matricat e autorizimeve.</li>
+          </ul>
+        </div>
+      </details>
+      <details class="item">
+        <summary>2) Verifikime & kontrolle</summary>
+        <div class="content">
+          <ul>
+            <li>Kontrolli i dokumentacionit dhe përputhshmërisë.</li>
+            <li>Verifikime trepalëshe sipas rastit (p.sh. PO–GRN–Invoice).</li>
+          </ul>
+        </div>
+      </details>
+      <details class="item">
+        <summary>3) Ekzekutimi</summary>
+        <div class="content">
+          <ol>
+            <li>Hapi 1 — …</li>
+            <li>Hapi 2 — …</li>
+            <li>Hapi 3 — …</li>
+          </ol>
+        </div>
+      </details>
+      <details class="item">
+        <summary>4) Daljet / Output-et</summary>
+        <div class="content">
+          <ul>
+            <li>Dokumente të miratuara, regjistrime në sistem, raporte.</li>
+            <li>Evidenca për auditim (log, nënshkrime, timestamp).</li>
+          </ul>
+        </div>
+      </details>
+      <details class="item">
+        <summary>5) Eskalime & përjashtime</summary>
+        <div class="content"><p>Përshkruaj si trajtohen devijimet dhe kë duhet të njoftosh.</p></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h2>Kontrolle kyçe</h2>
+      <table class="table">
+        <thead><tr><th>Kontrolli</th><th>Frekuenca</th><th>Evidenca</th></tr></thead>
+        <tbody>
+          <tr><td>Miratime sipas matricës</td><td>Çdo transaksion</td><td>Trail në sistem</td></tr>
+          <tr><td>Ndarje detyrash (SoD)</td><td>Vazhdueshëm</td><td>Lista roleve</td></tr>
+          <tr><td>Pajtimet</td><td>Mujore</td><td>Rekonsilime</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Dokumente & Template</h2>
+      <table class="table">
+        <thead><tr><th>Emri</th><th>Qëllimi</th><th>Data</th></tr></thead>
+        <tbody id="docs-body">
+          <tr><td>Template SOP</td><td>Udhëzues për përditësime</td><td class="muted">—</td></tr>
+        </tbody>
+      </table>
+      <div class="nav"><a href="#" onclick="addRow('docs-body')">+ Shto rresht</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Regjistër Ndryshimesh</h2>
+    <table class="table">
+      <thead><tr><th>Data</th><th>Përshkrimi</th><th>Autori</th></tr></thead>
+      <tbody id="chlog">
+        <tr><td class="muted">—</td><td contenteditable="plaintext-only">Krijimi i faqes</td><td contenteditable="plaintext-only">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="muted">
+    <div class="nav" style="margin-top:8px"><a href="procure-to-pay.html">Procure-to-Pay</a>
+<a href="order-to-cash.html">Order-to-Cash</a>
+<a href="cikli-i-pagave.html">Cikli i Pagave</a>
+<a href="mbyllja-mujore.html">Mbyllja Mujore</a>
+<a href="buxhetim-and-parashikim.html">Buxhetim & Parashikim</a>
+<a href="risk-and-compliance.html">Risk & Compliance</a></div>
+    <p style="margin-top:8px">© Order-to-Cash — SOP. Versioni i parë. Përditëso sipas praktikave të kompanisë.</p>
+  </footer>
+</div>
+<script>
+function nowISO(){const d=new Date();return d.toISOString().split('T')[0];}
+function addRow(id){const tbody=document.getElementById(id);const tr=document.createElement('tr');tr.innerHTML='<td contenteditable="plaintext-only">—</td><td contenteditable="plaintext-only">—</td><td class="muted">'+nowISO()+'</td>';tbody.appendChild(tr);}
+</script>
+</body>
+</html>
