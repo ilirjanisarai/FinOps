@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<link rel="icon" type="image/png" href="logo-finops.png"> 
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Finance & Operations · Intranet</title>
+
+<!-- Fonts & Icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+  :root{
+    /* THEME — Dark Blue + White + Soft Orange */
+    --brand:#1F3C88;        /* dark navy blue */
+    --brand-2:#14275b;      /* deeper shade */
+    --accent:#F39C12;       /* soft orange for accents */
+
+    --text:#0b1220; 
+    --muted:#6b7280;
+    --line:#e6e7eb; --line-2:#dfe3ea;
+    --surface:#ffffff; --surface-2:#f9fafb;
+    --bg:linear-gradient(160deg,#f7fbff 0%,#f2f5fb 40%,#ffffff 100%);
+    --shadow-lg:0 24px 60px rgba(2,8,23,.12);
+    --shadow:0 14px 36px rgba(2,8,23,.08);
+    --blur:10px;
+    --radius:16px;
+    --pill:999px;
+    --speed:.18s;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --text:#ecf0f6; --muted:#a7b1c2;
+      --surface:#101218; --surface-2:#0c0f14;
+      --line:#1c2230; --line-2:#232a3a;
+      --bg:radial-gradient(1200px 600px at -10% -10%, rgba(31,60,136,.25), transparent 60%), linear-gradient(160deg,#0a0d14 0%,#0b0f18 40%,#0a0c12 100%);
+      --shadow-lg:0 28px 60px rgba(0,0,0,.45);
+      --shadow:0 18px 38px rgba(0,0,0,.35);
+      --blur:8px;
+    }
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+    color:var(--text); background:var(--bg);
+  }
+
+  /* Header – glass hero */
+  header.appbar{
+    position:sticky; top:0; z-index:60;
+    backdrop-filter:saturate(1.1) blur(var(--blur));
+    background:linear-gradient(120deg,rgba(31,60,136,.85),rgba(20,39,91,.85));
+    color:#fff; border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .appbar-inner{display:flex; align-items:center; gap:16px; padding:14px 18px; max-width:1200px; margin:0 auto}
+  .brand{display:flex; align-items:center; gap:14px; cursor:pointer; position:relative}
+  .brand img{height:36px; width:auto; filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+  .brand-title h1{font-size:18px; margin:0; letter-spacing:.2px; font-weight:800}
+  .brand-title .tagline{font-size:12px; opacity:.9}
+  .shine{position:absolute; inset:-8px; pointer-events:none; border-radius:14px;
+         background:linear-gradient(110deg,transparent 0%,rgba(255,255,255,.18) 40%,transparent 70%);
+         transform:translateX(-120%); animation:shine 7s ease-in-out infinite}
+  @keyframes shine{0%{transform:translateX(-120%)} 60%,100%{transform:translateX(120%)}}
+  .spacer{flex:1}
+  .header-pills{display:flex; gap:10px; flex-wrap:wrap}
+  .pill{
+    display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:var(--pill);
+    border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.08); color:#fff;
+    font-weight:800; text-decoration:none; transform:translateY(0); transition:transform var(--speed), filter var(--speed)
+  }
+  .pill i{color:var(--accent)}
+  .pill:hover{transform:translateY(-2px); filter:brightness(1.08)}
+  .toggle{display:none}
+
+  /* Layout shell */
+  .layout{display:grid; grid-template-columns:320px 1fr; min-height:calc(100vh - 86px); max-width:1200px; margin:0 auto; width:100%}
+  aside.sidebar{
+    position:sticky; top:76px; height:calc(100vh - 76px); overflow:auto;
+    padding:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,.3));
+    backdrop-filter:blur(var(--blur)); border-right:1px solid var(--line)
+  }
+  main.content{padding:28px; min-height:calc(100vh - 76px)}
+
+  /* Sidebar groups */
+  .group{border:1px solid var(--line); border-radius:14px; background:var(--surface); box-shadow:var(--shadow); overflow:hidden; margin-bottom:14px}
+  .group summary{
+    list-style:none; cursor:pointer; user-select:none; position:relative;
+    display:flex; align-items:center; gap:12px; padding:12px 14px; font-weight:800;
+    border-bottom:1px solid var(--line-2); background:linear-gradient(180deg,rgba(0,0,0,.02),transparent);
+    transition:filter var(--speed), transform var(--speed)
+  }
+  .group summary::-webkit-details-marker{display:none}
+  .group summary:hover{filter:brightness(1.03)}
+  .group summary i{color:var(--brand)}
+  .group summary::after{
+    content:""; position:absolute; right:14px; top:50%; width:10px; height:10px;
+    border-right:2px solid #aeb5c2; border-bottom:2px solid #aeb5c2; transform:translateY(-50%) rotate(0deg); transition:transform .25s
+  }
+  .group[open] summary::after{ transform:translateY(-50%) rotate(45deg) }
+  .menu{padding:12px; display:grid; gap:10px}
+  .menu button{
+    width:100%; text-align:left; padding:12px 14px; border-radius:12px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--text); font-weight:800; cursor:pointer;
+    transition:transform var(--speed), box-shadow var(--speed), background var(--speed), color var(--speed)
+  }
+  .menu button:hover{transform:translateY(-2px); box-shadow:var(--shadow)}
+  .menu button.active{background:var(--brand); color:#fff}
+  .refresh-btn{
+    margin-top:10px; width:100%; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px; border-radius:12px; border:1px solid var(--line);
+    background:linear-gradient(180deg,var(--brand),var(--brand-2)); color:#fff; font-weight:800; cursor:pointer; box-shadow:var(--shadow-lg);
+    transition:transform var(--speed), filter var(--speed)
+  }
+  .refresh-btn:hover{transform:translateY(-2px); filter:brightness(1.05)}
+
+  /* Home hero & cards */
+  .portal{max-width:1000px; margin:auto}
+  .hero{
+    background:
+      radial-gradient(900px 360px at -10% -30%, rgba(31,60,136,.18), transparent 60%),
+      linear-gradient(135deg, rgba(31,60,136,.08), rgba(31,60,136,0)),
+      var(--surface);
+    border:1px solid var(--line); border-radius:18px; padding:20px; box-shadow:var(--shadow-lg)
+  }
+  .hero h2{margin:0 0 6px 0; color:var(--brand); font-weight:800}
+  .hero p{margin:0; color:var(--muted)}
+  .quick{margin-top:16px; display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px}
+  .qcard{border:1px solid var(--line); border-radius:16px; padding:14px; background:var(--surface); box-shadow:var(--shadow); border-left:6px solid var(--brand)}
+  .qcard a{color:var(--brand); font-weight:800; text-decoration:none}
+  .qcard a:hover{text-decoration:underline}
+
+  /* Search */
+  .search-wrap{margin-top:18px; display:grid; gap:10px}
+  .search-bar{display:flex; gap:10px}
+  .search-bar input{flex:1; padding:12px 14px; border:1px solid var(--line); border-radius:12px; font-weight:700; background:var(--surface)}
+  .search-bar button{padding:12px 14px; border-radius:12px; border:1px solid var(--line); background:var(--surface); font-weight:800; cursor:pointer}
+  .results{display:grid; gap:12px}
+  .result{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px; box-shadow:var(--shadow)}
+  .hl{background:rgba(243,156,18,.18); padding:0 3px; border-radius:4px}
+
+  /* Updates & modal */
+  .updates-grid{margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+  .update-card{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:var(--shadow)}
+  .tag{display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; border:1px solid var(--line); margin-right:6px; background:rgba(243,156,18,.15); color:#7a4b00}
+  .update-actions{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap}
+  .update-actions button{border:1px solid var(--line); background:var(--surface-2); border-radius:10px; padding:8px 10px; cursor:pointer; font-weight:800}
+
+  /* Viewer djathtas */
+  .viewer{position:relative; height:75vh; border:1px solid var(--line); border-radius:18px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow-lg)}
+  .viewer iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+  .loader{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:10px; background:rgba(255,255,255,.7); backdrop-filter:blur(6px); font-weight:800}
+  .dot{width:8px; height:8px; border-radius:999px; background:var(--accent); animation:bounce .9s infinite alternate}
+  .dot:nth-child(2){animation-delay:.15s} .dot:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{to{transform:translateY(-6px); opacity:.7}}
+
+  /* Forms */
+  .calc{background:var(--surface); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:16px}
+  .calc input,.calc select,.calc textarea{border:1px solid var(--line); border-radius:12px; padding:12px; font-weight:700; background:var(--surface-2); width:100%}
+  .calc .btn{margin-top:8px}
+
+  /* Table scroll */
+  .table-scroll{width:100%; overflow:auto}
+  .table-scroll table{min-width:640px}
+
+  /* Modal */
+  .modal{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:18px; z-index:100}
+  .modal .panel{background:var(--surface); max-width:860px; width:100%; border-radius:18px; border:1px solid var(--line); box-shadow:var(--shadow-lg); padding:18px}
+  .modal .panel h3{margin-top:0}
+  .modal .close{float:right; cursor:pointer; font-weight:800}
+  .news-meta{font-size:12px; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap}
+
+  /* Breakpoints */
+  @media (max-width: 1140px){
+    .appbar-inner{padding:12px 14px}
+    .brand img{height:34px}
+    .toggle{display:inline-flex; margin-left:8px; align-items:center; gap:8px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:#fff; padding:8px 12px; border-radius:12px; font-weight:800; cursor:pointer}
+    .layout{grid-template-columns:1fr}
+    aside.sidebar{
+      position:fixed; top:76px; left:0; right:0;
+      height:auto; max-height:72vh; transform:translateY(-120%); transition:transform .22s ease;
+      border-right:none; border-bottom:1px solid var(--line)
+    }
+    aside.sidebar.open{transform:translateY(0%)}
+    main.content{padding:18px}
+    .viewer{height:70vh}
+  }
+  @media (max-width: 640px){
+    .brand-title h1{font-size:16px}
+    .brand-title .tagline{display:none}
+    .header-pills{display:none}
+    .hero{padding:16px}
+    .quick{grid-template-columns:1fr}
+    .updates-grid{grid-template-columns:1fr}
+    .viewer{height:65vh}
+    .modal .panel{padding:14px; border-radius:14px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="brand" onclick="resetToMain()" title="Kthehu në faqen kryesore">
+      <img src="logo-finops.png" alt="FinOps" onerror="this.style.display='none'">
+      <div class="brand-title">
+        <h1>Finance & Operations · Intranet</h1>
+        <div class="tagline">Transparencë, kontroll dhe efikasitet</div>
+      </div>
+      <div class="shine"></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="header-pills">
+      <a class="pill" href="#" onclick="loadPage(null,'policies/finance-policy.html')"><i class="fa-solid fa-scale-balanced"></i> Politika</a>
+      <a class="pill" href="#" onclick="loadPage(null,'reports/kpi-dashboard.html')"><i class="fa-solid fa-chart-line"></i> KPI</a>
+      <a class="pill" href="mailto:finops@company.tld"><i class="fa-solid fa-envelope"></i> finops@company.tld</a>
+    </div>
+    <button class="toggle" aria-expanded="false" aria-controls="sidebar" onclick="toggleSidebar(this)"><i class="fa-solid fa-bars"></i> Menu</button>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar" aria-label="Navigimi anësor">
+
+    <details class="group" open>
+      <summary><i class="fa-solid fa-house"></i> Kreu</summary>
+      <div class="menu">
+        <button onclick="goHome(this)">Kreu & Quick Links</button>
+        <button onclick="scrollToSection('search')">Kërko</button>
+        <button onclick="scrollToSection('updates')">Updates & Njoftime</button>
+        <button onclick="scrollToSection('new-request')">New Request (Expense/PO/Invoice)</button>
+        <button onclick="loadPage(this,'about_finops.html')">Rreth portalit</button>
+      </div>
+    </details>
+
+    <details class="group">
+      <summary><i class="fa-solid fa-calculator"></i> Finance Tools</summary>
+      <div class="menu">
+        <button onclick="loadPage(this,'tools/vat-calculator.html')">Kalkulatori i TVSH-së</button>
+        <button onclick="loadPage(this,'tools/roi-calculator.html')">ROI / Payback</button>
+        <button onclick="loadPage(this,'tools/breakeven.html')">Break-even</button>
+      </div>
+    </details>
+
+    <details class="group">
+      <summary><i class="fa-solid fa-book"></i> Baza e njohurive</summary>
+      <div class="menu">
+        <button onclick="loadPage(this,'policies/procurement-policy.html')">Politika e Prokurimit</button>
+        <button onclick="loadPage(this,'policies/travel-expense.html')">Udhëtim & Shpenzime</button>
+        <button onclick="loadPage(this,'templates/index.html')">Templates (fatura, PO, kontrata)</button>
+        <button onclick="loadPage(this,'privacy.html')">Politika e Privatësisë</button>
+      </div>
+    </details>
+
+    <details class="group">
+      <summary><i class="fa-solid fa-list-check"></i> Procese & SOP</summary>
+      <div class="menu">
+        <button onclick="loadPage(this,'sop/procure-to-pay.pdf')">Procure-to-Pay</button>
+        <button onclick="loadPage(this,'sop/order-to-cash.pdf')">Order-to-Cash</button>
+        <button onclick="loadPage(this,'sop/payroll-cycle.pdf')">Cikli i Pagave</button>
+        <button onclick="loadPage(this,'sop/month-end-close.pdf')">Mbyllja Mujore</button>
+        <button onclick="loadPage(this,'sop/budgeting-forecasting.pdf')">Buxhetim & Parashikim</button>
+        <button onclick="loadPage(this,'sop/risk-compliance.pdf')">Risk & Compliance</button>
+      </div>
+    </details>
+
+    <details class="group">
+      <summary><i class="fa-solid fa-chart-pie"></i> Raporte</summary>
+      <div class="menu">
+        <button onclick="loadPage(this,'reports/ap-aging.html')">AP Aging</button>
+        <button onclick="loadPage(this,'reports/ar-aging.html')">AR Aging</button>
+        <button onclick="loadPage(this,'reports/cashflow.html')">Cashflow</button>
+        <button onclick="loadPage(this,'reports/kpi-dashboard.html')">KPI Dashboard</button>
+      </div>
+    </details>
+
+    <button class="refresh-btn" onclick="resetToMain()"><i class="fa-solid fa-rotate"></i> Rifresko & Mbyll Menutë</button>
+  </aside>
+
+  <!-- Content -->
+  <main class="content" id="content">
+    <div class="portal" id="home">
+      <section class="hero" role="region" aria-label="Mirë se vini">
+        <h2>Mirë se vini në Finance & Operations</h2>
+        <p class="muted">Qendra e punës për ekipin: politika, procese, <strong>New Request</strong>, mjete financiare dhe njoftime. 
+          Raportet dhe kalkulatorët janë në faqet e dedikuara.</p>
+      </section>
+
+      <!-- Quick links -->
+      <section class="quick" aria-label="Lidhje të shpejta">
+        <div class="qcard"><a href="#" onclick="loadPage(null,'policies/procurement-policy.html')">Politika e Prokurimit</a></div>
+        <div class="qcard"><a href="#" onclick="loadPage(null,'templates/index.html')">Templates (PO / Invoice)</a></div>
+        <div class="qcard"><a href="#" onclick="scrollToSection('new-request')">New Request (Expense/PO/Invoice)</a></div>
+        <div class="qcard"><a href="#" onclick="loadPage(null,'tools/roi-calculator.html')">ROI / Payback</a></div>
+      </section>
+
+      <!-- Search -->
+      <section id="search" class="search-wrap" aria-label="Kërko">
+        <div class="search-bar">
+          <input id="q" type="search" placeholder="Kërko (p.sh. 'procure', 'invoice', 'policy')">
+          <button onclick="runSearch()">Kërko</button>
+        </div>
+        <div id="search-stats" class="muted"></div>
+        <div id="results" class="results"></div>
+      </section>
+
+      <!-- Updates & Njoftime -->
+      <section id="updates" aria-label="Updates & Njoftime" style="margin-top:18px">
+        <h3 style="margin:0 0 8px 0;">Updates & Njoftime</h3>
+        <div id="updates-wrap" class="updates-grid"></div>
+        <div id="updates-empty" class="muted" style="display:none;margin-top:8px">
+          S’ka lajme akoma. Shto artikuj në Newsroom-in e portalit.
+        </div>
+      </section>
+
+      <!-- NEW REQUEST (Expense / PO / Invoice) -->
+      <section id="new-request" style="margin-top:18px">
+        <h3 style="margin:0 0 8px 0;">New Request (Expense / PO / Invoice)</h3>
+        <form id="finReqForm" class="calc" onsubmit="return sendFinRequest(event)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <select id="fr_type" required>
+              <option value="">— Lloji i kërkesës —</option>
+              <option>Expense</option>
+              <option>Purchase Order (PO)</option>
+              <option>Invoice</option>
+            </select>
+            <input id="fr_vendor" placeholder="Emri i furnitorit / partnerit" required>
+            <input id="fr_amount" placeholder="Shuma (me TVSH) – lekë" type="number" min="0" step="1" required>
+            <input id="fr_costcenter" placeholder="Qendra e kostos (p.sh. FIN-001)" required>
+            <input id="fr_due" placeholder="Afati i pagesës (YYYY-MM-DD)" type="date" required>
+            <input id="fr_email" placeholder="Kontakt/Email (ops.)" type="email">
+          </div>
+          <textarea id="fr_notes" placeholder="Përshkrim i shkurtër / arsyetim" style="margin-top:10px;width:100%;height:90px"></textarea>
+
+          <!-- Honeypot anti-spam -->
+          <input type="text" id="fr_hp" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+
+          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <button type="submit" class="menu button btn"><i class="fa-solid fa-paper-plane"></i> Dërgo kërkesën</button>
+            <button type="button" class="menu button btn" onclick="document.getElementById('finReqForm').reset()">
+              <i class="fa-solid fa-eraser"></i> Pastro
+            </button>
+          </div>
+          <div id="finReqMsg" class="muted" style="margin-top:8px"></div>
+        </form>
+      </section>
+    </div>
+
+    <!-- Viewer (djathas) -->
+    <div id="viewer" class="viewer" hidden>
+      <div class="loader" id="loader" aria-live="polite">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span>Po ngarkohet…</span>
+      </div>
+      <iframe id="frame" title="Përmbajtja" src=""></iframe>
+    </div>
+  </main>
+</div>
+
+<!-- Modal viewer për lajmet -->
+<div class="modal" id="newsModal">
+  <div class="panel">
+    <span class="close" onclick="closeNewsModal()">✕</span>
+    <h3 id="nm_title">—</h3>
+    <div class="news-meta" id="nm_meta"></div>
+    <div id="nm_body" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<script>
+/* ===== Sidebar & UI ===== */
+function toggleSidebar(btn){
+  const s = document.getElementById('sidebar');
+  const open = !s.classList.contains('open');
+  s.classList.toggle('open', open);
+  if(btn) btn.setAttribute('aria-expanded', String(open));
+}
+function closeAllMenus(){ document.querySelectorAll('aside details').forEach(d=>d.open=false); }
+function setActive(btn){
+  document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+/* ===== Viewer / Router ===== */
+function showViewer(){ document.getElementById('home').hidden = true; document.getElementById('viewer').hidden = false; }
+function showHome(){ document.getElementById('viewer').hidden = true; document.getElementById('home').hidden = false; }
+
+function loadPage(btn, url){
+  setActive(btn); showViewer();
+  document.getElementById('sidebar')?.classList.remove('open');
+  const f = document.getElementById('frame'); const l = document.getElementById('loader');
+  l.style.display='flex'; requestAnimationFrame(()=>{ f.src = url; });
+  f.onload = ()=> l.style.display='none';
+  f.onerror = ()=> l.innerHTML = '<span style="font-weight:800;color:#ef4444">Nuk u ngarkua.</span>';
+  pushRoute({view:'page', url});
+}
+function goHome(btn){ setActive(btn); resetToMain(); }
+function scrollToSection(id){
+  setActive(null); showHome();
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+  pushRoute({view:'home', anchor:id});
+}
+
+let _suppressPush = false;
+function pushRoute(state){
+  if(_suppressPush) return;
+  const hash = state.view==='page' ? '#/page/'+encodeURIComponent(state.url) :
+               state.anchor ? '#/home/'+encodeURIComponent(state.anchor) : '#/home';
+  history.pushState(state,'',hash);
+}
+function parseHashToState(){
+  const h = location.hash || '';
+  if(h.startsWith('#/page/')) return {view:'page', url:decodeURIComponent(h.slice(7))};
+  if(h.startsWith('#/home/')) return {view:'home', anchor:decodeURIComponent(h.slice(7))};
+  return {view:'home'};
+}
+function applyState(s){
+  if(!s || s.view==='home'){
+    showHome(); setActive(null); closeAllMenus();
+    if(s && s.anchor){ document.getElementById(s.anchor)?.scrollIntoView(); }
+    const f=document.getElementById('frame'); const l=document.getElementById('loader');
+    if(f) f.src=''; if(l) l.style.display='none';
+    return;
+  }
+  if(s.view==='page' && s.url){
+    showViewer();
+    const f=document.getElementById('frame'); const l=document.getElementById('loader');
+    l.style.display='flex'; requestAnimationFrame(()=>{ f.src=s.url; });
+    f.onload=()=> l.style.display='none';
+  }
+}
+function initRouter(){
+  const s=parseHashToState();
+  history.replaceState(s,'',location.href);
+  applyState(s);
+  window.addEventListener('popstate', (e)=>{
+    _suppressPush=true;
+    applyState(e.state || parseHashToState());
+    _suppressPush=false;
+  });
+}
+function resetToMain(){
+  setActive(null); showHome(); closeAllMenus();
+  window.scrollTo({top:0, behavior:'smooth'});
+  const f=document.getElementById('frame'); const l=document.getElementById('loader');
+  if(f) f.src=''; if(l) l.style.display='none';
+  pushRoute({view:'home'});
+}
+
+/* ===== Search / Static index ===== */
+const PAGES = [
+  {title:'Politika e Prokurimit',  url:'policies/procurement-policy.html', updated:'2025-08-01'},
+  {title:'Udhëtim & Shpenzime',    url:'policies/travel-expense.html',     updated:'2025-07-20'},
+  {title:'Templates',              url:'templates/index.html',             updated:'2025-08-10'},
+  {title:'Privacy Policy',         url:'privacy.html',                      updated:'2025-05-20'},
+  {title:'Procure-to-Pay (PDF)',   url:'sop/procure-to-pay.pdf',           updated:'2025-07-10', pdf:true},
+  {title:'Order-to-Cash (PDF)',    url:'sop/order-to-cash.pdf',            updated:'2025-07-10', pdf:true},
+  {title:'Cikli i Pagave (PDF)',   url:'sop/payroll-cycle.pdf',             updated:'2025-07-15', pdf:true},
+  {title:'Mbyllja Mujore (PDF)',   url:'sop/month-end-close.pdf',          updated:'2025-07-18', pdf:true},
+  {title:'Buxhetim & Parashikim',  url:'sop/budgeting-forecasting.pdf',    updated:'2025-07-18', pdf:true},
+  {title:'Risk & Compliance',      url:'sop/risk-compliance.pdf',           updated:'2025-07-22', pdf:true},
+  {title:'KPI Dashboard',          url:'reports/kpi-dashboard.html',       updated:'2025-08-25'}
+];
+const INDEX = new Map();
+let indexing = false;
+async function buildIndex(){
+  if(indexing || INDEX.size===PAGES.length) return; indexing = true;
+  for(const p of PAGES){
+    try{
+      if(p.pdf){ INDEX.set(p.url,{title:p.title,text:'',updated:p.updated,pdf:true}); continue; }
+      const res = await fetch(p.url,{cache:'no-store'}); const html = await res.text();
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html.replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'');
+      const text = (tmp.textContent||'').replace(/\s+/g,' ').trim();
+      INDEX.set(p.url,{title:p.title,text,updated:p.updated,pdf:false});
+    }catch(e){ INDEX.set(p.url,{title:p.title,text:'',updated:p.updated,pdf:!!p.pdf}); }
+  }
+  indexing=false;
+}
+function highlight(s,q){ const r=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'); return s.replace(r,m=>`<span class="hl">${m}</span>`); }
+function snippet(t,q,len=150){
+  const i=t.toLowerCase().indexOf(q.toLowerCase()); if(i===-1) return (t||'').slice(0,len)+(t.length>len?'…':'');
+  const s=Math.max(0,i-Math.floor(len/2)); const e=Math.min(t.length,s+len); const sl=t.slice(s,e);
+  return (s>0?'…':'')+highlight(sl,q)+(e<t.length?'…':'');
+}
+let searchDebounce;
+document.addEventListener('DOMContentLoaded',()=>{
+  const qi=document.getElementById('q');
+  if(qi){ qi.addEventListener('input',()=>{ clearTimeout(searchDebounce); searchDebounce=setTimeout(runSearch,200); }); }
+});
+async function runSearch(){
+  const q=document.getElementById('q').value.trim(); const stats=document.getElementById('search-stats'); const box=document.getElementById('results');
+  if(!q){ stats.textContent=''; box.innerHTML=''; return; }
+  buildIndex();
+  const results=[];
+  for(const p of PAGES){
+    const it = INDEX.get(p.url); if(!it) continue;
+    const hay = (p.title+' '+it.text).toLowerCase();
+    if(hay.includes(q.toLowerCase())){
+      results.push({title:p.title,url:p.url,updated:p.updated,snippet: it.text? snippet(it.text,q):'(PDF)', pdf:!!p.pdf});
+    }
+  }
+  results.sort((a,b)=> b.updated.replace(/-/g,'').localeCompare(a.updated.replace(/-/g,'')));
+  stats.textContent = `${results.length} rezultat(e)`;
+  box.innerHTML = results.map(r=>`
+    <div class="result">
+      <h4>${r.title} ${r.pdf?'<span class="tag">PDF</span>':''}</h4>
+      <div class="muted" style="font-size:12px">Përditësuar: ${r.updated||'-'}</div>
+      <div style="margin-top:6px;color:#374151">${r.snippet}</div>
+      <div style="margin-top:10px"><button class="menu button btn" onclick="loadPage(null,'${r.url}')">Hap</button></div>
+    </div>`).join('');
+}
+
+/* ===== Updates & Njoftime nga LocalStorage ===== */
+const NEWS_LS_KEY = 'FINOPS_NEWSROOM_V1';
+function getNews(){
+  try{ const arr = JSON.parse(localStorage.getItem(NEWS_LS_KEY)||'[]'); return Array.isArray(arr)? arr:[]; }
+  catch{ return []; }
+}
+function renderHomeNews(limit=8){
+  const list = getNews().slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  const wrap = document.getElementById('updates-wrap');
+  const empty = document.getElementById('updates-empty');
+  if(!list.length){ wrap.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  const items = list.slice(0, limit);
+  wrap.innerHTML = items.map(x=>`
+    <div class="update-card">
+      <div class="muted" style="font-size:12px">${x.date || '-'}</div>
+      ${x.tag ? `<div style=\"margin:6px 0\"><span class=\"tag\">${escapeHtml(x.tag)}</span></div>` : '<div style=\"height:10px\"></div>'}
+      <div style="font-weight:800">${escapeHtml(x.title||'—')}</div>
+      <div style="margin-top:6px;color:#374151">${escapeHtml((x.summary||'').slice(0,200))}${(x.summary&&x.summary.length>200)?'…':''}</div>
+      <div class="update-actions">
+        <button onclick="openNewsModal('${x.id||''}')"><i class="fa-regular fa-eye"></i> Lexo</button>
+        ${x.link ? `<a class=\"pill\" style=\"text-decoration:none\" href=\"${escapeAttr(x.link)}\" target=\"_blank\" rel=\"noopener\"><i class=\"fa-solid fa-up-right-from-square\"></i> Hap link</a>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+/* ===== Modal Viewer për lajmet ===== */
+function openNewsModal(id){
+  const arr = getNews(); const x = arr.find(i=>i.id===id);
+  if(!x){ alert('Artikulli nuk u gjet.'); return; }
+  document.getElementById('nm_title').textContent = x.title || '—';
+  document.getElementById('nm_meta').innerHTML = `
+    <span>${x.date || '-'}</span>
+    ${x.tag ? `<span class="tag">${escapeHtml(x.tag)}</span>` : ''}
+  `;
+  document.getElementById('nm_body').textContent = x.summary || '';
+  document.getElementById('newsModal').style.display = 'flex';
+}
+function closeNewsModal(){ document.getElementById('newsModal').style.display='none'; }
+
+/* ===== Formspree — dërgim i kërkesave ===== */
+const FORMSPREE_ACTION = 'https://formspree.io/f/mrbagara'; // ndryshoje në endpoint-in tënd
+
+async function sendFinRequest(e){
+  e.preventDefault();
+  const msg = document.getElementById('finReqMsg');
+  const hp  = document.getElementById('fr_hp').value;
+  if(hp){ return false; } // honeypot
+
+  const v = {
+    type:       document.getElementById('fr_type').value.trim(),
+    vendor:     document.getElementById('fr_vendor').value.trim(),
+    amount:     document.getElementById('fr_amount').value.trim(),
+    costcenter: document.getElementById('fr_costcenter').value.trim(),
+    due:        document.getElementById('fr_due').value,
+    email:      document.getElementById('fr_email').value.trim(),
+    notes:      document.getElementById('fr_notes').value.trim()
+  };
+
+  if(!v.type || !v.vendor || !v.amount || !v.costcenter || !v.due){
+    msg.textContent = 'Plotëso Llojin, Furnitorin, Shumën, Qendrën e kostos dhe Afatin.';
+    msg.style.color = '#b91c1c';
+    return false;
+  }
+
+  const data = new FormData();
+  data.append('request_type', v.type);
+  data.append('vendor',       v.vendor);
+  data.append('amount',       v.amount);
+  data.append('cost_center',  v.costcenter);
+  data.append('due_date',     v.due);
+  data.append('email',        v.email);
+  data.append('notes',        v.notes);
+
+  data.append('_subject', 'FinOps Request - ' + v.type + ' - ' + v.vendor);
+  if(v.email){ data.append('_replyto', v.email); }
+
+  msg.textContent = 'Duke dërguar…';
+  msg.style.color = '#6b7280';
+
+  try{
+    const res = await fetch(FORMSPREE_ACTION, { method: 'POST', body: data, headers: { 'Accept': 'application/json' }});
+    if(res.ok){
+      document.getElementById('finReqForm').reset();
+      msg.textContent = 'U dërgua me sukses!';
+      msg.style.color = '#0f7a33';
+    } else {
+      let errText = 'Problem gjatë dërgimit. Provo sërish.';
+      try{
+        const j = await res.json();
+        if(j.errors && j.errors.length){ errText = j.errors[0].message; }
+      }catch(_){ }
+      msg.textContent = errText;
+      msg.style.color = '#b91c1c';
+    }
+  }catch(_){
+    msg.textContent = 'Nuk u lidhëm me shërbimin. Kontrollo rrjetin dhe provo sërish.';
+    msg.style.color = '#b91c1c';
+  }
+  return false;
+}
+
+/* ===== Helpers ===== */
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, function(ch){
+    switch(ch){
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case "'": return '&#39;';
+      default: return ch;
+    }
+  });
+}
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'%22'); }
+
+/* ===== Init ===== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  initRouter();
+  buildIndex();
+  renderHomeNews();
+});
+</script>
+</body>
+</html>
