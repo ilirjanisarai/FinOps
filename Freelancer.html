@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kalkulator për Faturat e Freelancer-it</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
+    input[type="number"], input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn {
+      padding: 8px 12px;
+      margin: 5px 0;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+    }
+    .btn-primary {
+      background: #007bff;
+      color: #fff;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: #fff;
+    }
+    .summary-box {
+      margin-top: 15px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .status-ok {
+      color: green;
+      font-weight: bold;
+    }
+    .status-warning {
+      color: #d9534f;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kalkulator i Faturave për Freelancer</h1>
+
+  <p>
+    Shto klientët e tu, numrin e faturave dhe vlerën totale të faturave për secilin.
+    Më pas kliko <strong>"Llogarit"</strong> për të parë përqindjet dhe verifikimin e rregullit 80% / 90%.
+  </p>
+
+  <button class="btn btn-primary" onclick="addRow()">+ Shto klient</button>
+
+  <table id="invoiceTable">
+    <thead>
+      <tr>
+        <th>Klienti</th>
+        <th>Nr. faturave</th>
+        <th>Vlera totale (ALL)</th>
+        <th>% e faturave</th>
+        <th>% e vlerës</th>
+        <th>Hiq</th>
+      </tr>
+    </thead>
+    <tbody id="invoiceBody">
+      <!-- Rreshtet do shtohen me JS -->
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Totali</th>
+        <th id="totalInvoices">0</th>
+        <th id="totalValue">0</th>
+        <th>100%</th>
+        <th>100%</th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <button class="btn btn-primary" onclick="calculate()">Llogarit</button>
+
+  <div class="summary-box">
+    <h3>Rezultatet</h3>
+    <p><strong>Klienti me përqindjen më të lartë të vlerës:</strong>
+      <span id="maxClientInfo">-</span>
+    </p>
+    <p><strong>Përqindja e tij/e saj:</strong>
+      <span id="maxClientPercent">0%</span>
+    </p>
+    <p><strong>Top 3 klientët sipas vlerës:</strong>
+      <span id="top3Percent">0%</span>
+    </p>
+    <p><strong>Vlerësim sipas rregullit 80% / 90%:</strong>
+      <span id="ruleStatus">-</span>
+    </p>
+  </div>
+
+  <script>
+    function addRow(name = "", invoices = "", value = "") {
+      const tbody = document.getElementById("invoiceBody");
+      const tr = document.createElement("tr");
+      tr.className = "client-row";
+
+      tr.innerHTML = `
+        <td><input type="text" placeholder="Emri i klientit" value="${name}"></td>
+        <td><input type="number" min="0" step="1" value="${invoices}" oninput="calculate()"></td>
+        <td><input type="number" min="0" step="0.01" value="${value}" oninput="calculate()"></td>
+        <td class="percent-invoices">0%</td>
+        <td class="percent-value">0%</td>
+        <td><button class="btn btn-danger" onclick="removeRow(this)">X</button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function removeRow(btn) {
+      const row = btn.closest("tr");
+      row.remove();
+      calculate();
+    }
+
+    function calculate() {
+      const rows = document.querySelectorAll(".client-row");
+      let totalInvoices = 0;
+      let totalValue = 0;
+
+      // Llogarit totalet
+      rows.forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        const nrFaturave = parseFloat(inputs[1].value) || 0;
+        const vlera = parseFloat(inputs[2].value) || 0;
+        totalInvoices += nrFaturave;
+        totalValue += vlera;
+      });
+
+      // Përditëso totalet në footer
+      document.getElementById("totalInvoices").textContent = totalInvoices.toFixed(0);
+      document.getElementById("totalValue").textContent = totalValue.toFixed(2);
+
+      // Llogarit përqindjet për çdo klient
+      let clientData = []; // për rregullin 80/90
+
+      rows.forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        const clientName = inputs[0].value || "(pa emër)";
+        const nrFaturave = parseFloat(inputs[1].value) || 0;
+        const vlera = parseFloat(inputs[2].value) || 0;
+
+        const percInv = totalInvoices > 0 ? (nrFaturave / totalInvoices) * 100 : 0;
+        const percVal = totalValue > 0 ? (vlera / totalValue) * 100 : 0;
+
+        row.querySelector(".percent-invoices").textContent = percInv.toFixed(1) + "%";
+        row.querySelector(".percent-value").textContent = percVal.toFixed(1) + "%";
+
+        clientData.push({
+          name: clientName,
+          percentValue: percVal
+        });
+      });
+
+      // Nëse s’ka të dhëna, pastro rezultatet
+      if (clientData.length === 0 || totalValue === 0) {
+        document.getElementById("maxClientInfo").textContent = "-";
+        document.getElementById("maxClientPercent").textContent = "0%";
+        document.getElementById("top3Percent").textContent = "0%";
+        document.getElementById("ruleStatus").innerHTML = "<span class='status-warning'>S’ka të dhëna për llogaritje.</span>";
+        return;
+      }
+
+      // Gjej klientin me përqindjen më të lartë
+      clientData.sort((a, b) => b.percentValue - a.percentValue);
+      const maxClient = clientData[0];
+      document.getElementById("maxClientInfo").textContent = maxClient.name;
+      document.getElementById("maxClientPercent").textContent = maxClient.percentValue.toFixed(1) + "%";
+
+      // Llogarit top 3
+      const top3 = clientData.slice(0, 3);
+      const top3Percent = top3.reduce((sum, c) => sum + c.percentValue, 0);
+      document.getElementById("top3Percent").textContent = top3Percent.toFixed(1) + "%";
+
+      // Vlerësimi sipas rregullit 80% / 90%
+      let statusText = "";
+      let className = "status-ok";
+
+      const over80Single = maxClient.percentValue > 80;
+      const over90Top3 = top3Percent > 90;
+
+      if (over80Single && over90Top3) {
+        statusText = "Rrezik i lartë të konsiderohesh marrëdhënie pune (1 klient >80% dhe top 3 >90%).";
+        className = "status-warning";
+      } else if (over80Single) {
+        statusText = "Klienti kryesor ka më shumë se 80% të të ardhurave – rrezik i fortë të trajtohesh si punë i varur.";
+        className = "status-warning";
+      } else if (over90Top3) {
+        statusText = "Top 3 klientët tejkalojnë 90% të të ardhurave – rrezik për t’u klasifikuar si marrëdhënie pune.";
+        className = "status-warning";
+      } else {
+        statusText = "Sipas përqindjeve aktuale je në përputhje me rregullin 80% / 90% (si freelancer i pavarur).";
+        className = "status-ok";
+      }
+
+      document.getElementById("ruleStatus").innerHTML = `<span class="${className}">${statusText}</span>`;
+    }
+
+    // Shto disa rreshta bosh në fillim
+    window.onload = function() {
+      addRow();
+      addRow();
+      addRow();
+    };
+  </script>
+</body>
+</html>
